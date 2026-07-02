@@ -1,15 +1,71 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id                 String     @id @default(cuid())
+  name               String  
+  members            Membership[]
+  documents          Document[]
+  conversations      Conversation[]
+  createdAt          DateTime    @default(now())  
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  memberships Membership[]
+}
+
+model Membership {
+  id     String @id @default(cuid())
+  userId String
+  orgId  String
+  role   Role   @default(MEMBER) // ADMIN | MEMBER
+  user   User @relation(fields: [userId], references: [id])
+  org    Organization @relation(fields: [orgId], references: [id])
+  @@unique([userId, orgId])
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  orgId     String
+  title     String
+  sourceType String  // pricing | playbook | faq | case_study | battlecard
+  status    String   // processing | ready | failed
+  chunkCount Int     @default(0)
+  uploadedBy String
+  createdAt DateTime @default(now())
+  org       Organization @relation(fields: [orgId], references: [id])
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  orgId     String
+  userId    String
+  title     String?
+  messages  Message[]
+  createdAt DateTime @default(now())
+  org       Organization @relation(fields: [orgId], references: [id])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  role           String   // user | assistant
+  content        String
+  citedChunkIds  String[] // for source citations
+  latencyMs      Int?
+  createdAt      DateTime @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  MEMBER
 }
