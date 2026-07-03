@@ -3,6 +3,7 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
 import LogoutButton from "./LogoutButton";
+import Link from "next/link";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -54,6 +55,10 @@ export default async function DashboardPage() {
                 <span className="text-zinc-400">Your Role</span>
                 <span className="font-medium text-purple-400">{membership.role}</span>
               </div>
+
+              <Link href={"/dashboard/chat"}>
+                Chats
+              </Link>
             </div>
           </div>
         </main>

@@ -10,12 +10,17 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.2",
+    "@huggingface/inference": "^4.13.22",
+    "@langchain/textsplitters": "^1.0.1",
     "@prisma/client": "^6.19.3",
+    "@qdrant/js-client-rest": "^1.18.0",
     "bcrypt": "^6.0.0",
+    "mammoth": "^1.12.0",
     "next": "16.2.10",
     "next-auth": "^4.24.14",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
