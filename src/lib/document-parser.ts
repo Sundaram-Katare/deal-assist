@@ -1,5 +1,11 @@
 // @ts-ignore
-import pdfParse from "pdf-parse";
+// @ts-ignore
+if (typeof global !== "undefined" && typeof global.DOMMatrix === "undefined") {
+    (global as any).DOMMatrix = class DOMMatrix {
+        constructor() { return [1, 0, 0, 1, 0, 0]; }
+    };
+}
+const pdfParse = require("pdf-parse/lib/pdf-parse.js");
 import mammoth from "mammoth";
 
 function cleanText(text: string): string {

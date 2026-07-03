@@ -9,18 +9,25 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^4.0.7",
+    "@ai-sdk/react": "^1.0.0",
     "@auth/prisma-adapter": "^2.11.2",
     "@huggingface/inference": "^4.13.22",
+    "@langchain/core": "^1.2.1",
     "@langchain/textsplitters": "^1.0.1",
     "@prisma/client": "^6.19.3",
     "@qdrant/js-client-rest": "^1.18.0",
+    "ai": "^3.4.33",
     "bcrypt": "^6.0.0",
     "mammoth": "^1.12.0",
     "next": "16.2.10",
     "next-auth": "^4.24.14",
+    "pdf-parse": "^1.1.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "uuid": "^14.0.1"
+    "react-markdown": "^10.1.0",
+    "uuid": "^14.0.1",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
