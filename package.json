@@ -19,6 +19,8 @@
     "@qdrant/js-client-rest": "^1.18.0",
     "ai": "^3.4.33",
     "bcrypt": "^6.0.0",
+    "framer-motion": "^12.42.2",
+    "lucide-react": "^1.23.0",
     "mammoth": "^1.12.0",
     "next": "16.2.10",
     "next-auth": "^4.24.14",
