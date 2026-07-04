@@ -11,7 +11,7 @@ const groq = createOpenAI({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-const MODEL = "llama3-8b-8192";
+const MODEL = "llama-3.1-8b-instant";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -106,5 +106,7 @@ INSTRUCTIONS:
     } as any,
   });
 
-  return (result as any).toTextStreamResponse ? (result as any).toTextStreamResponse() : (result as any).toAIStreamResponse ? (result as any).toAIStreamResponse() : (result as any).toDataStreamResponse();
-}
+  console.log(result);
+
+  return result.toDataStreamResponse();
+}
