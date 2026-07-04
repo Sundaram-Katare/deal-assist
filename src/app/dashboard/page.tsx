@@ -239,13 +239,13 @@ export default async function DashboardPage() {
               <h3 className="font-semibold text-white text-sm">Quick Links</h3>
             </div>
             <div className="space-y-3">
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 cursor-pointer transition-colors flex items-center justify-between group">
+              <Link href="/dashboard/pricing" className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 cursor-pointer transition-colors flex items-center justify-between group block">
                 <div>
                   <div className="text-xs font-semibold text-[#00D47E] mb-1">Pricing</div>
                   <div className="text-[10px] text-zinc-500">View plans and features</div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-              </div>
+              </Link>
               <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 cursor-pointer transition-colors flex items-center justify-between group">
                 <div>
                   <div className="text-xs font-semibold text-[#00D47E] mb-1">Documentation</div>
