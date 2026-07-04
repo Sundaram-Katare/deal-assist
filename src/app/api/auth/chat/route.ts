@@ -31,9 +31,26 @@ export async function POST(req: Request) {
   const userId = session.user.id;
   const orgId = membership.orgId;
 
-  const { messages } = await req.json();
+  const { messages, chatId } = await req.json();
   const lastMessage = messages[messages.length - 1];
   const userQuestion = lastMessage.content;
+
+  console.log("Incoming POST with chatId:", chatId);
+
+  if (chatId) {
+    try {
+      await prisma.message.create({
+        data: {
+          conversationId: chatId,
+          role: "user",
+          content: userQuestion,
+        }
+      });
+      console.log("Successfully saved user message");
+    } catch (dbError) {
+      console.error("Failed to save user message:", dbError);
+    }
+  }
 
   // RAG: Retrieve context
   let context = "";
@@ -104,6 +121,17 @@ INSTRUCTIONS:
         },
       } as any
     } as any,
+    onFinish: async ({ text }) => {
+      if (chatId && text) {
+        await prisma.message.create({
+          data: {
+            conversationId: chatId,
+            role: "assistant",
+            content: text,
+          }
+        });
+      }
+    },
   });
 
   console.log(result);
