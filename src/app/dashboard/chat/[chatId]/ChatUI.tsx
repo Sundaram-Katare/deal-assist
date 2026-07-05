@@ -1,21 +1,48 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { Plus, X, FileText, Mail, Presentation, Sparkles } from "lucide-react";
+
+const AVAILABLE_TOOLS = [
+  { id: "generateProposal", name: "Create Proposal", icon: FileText },
+  { id: "generateEmail", name: "Email Generator", icon: Mail },
+  { id: "generatePitch", name: "Sales Pitch Generator", icon: Presentation },
+];
 
 export default function ChatUI({ chatId, initialMessages }: { chatId: string, initialMessages: any[] }) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
     api: "/api/auth/chat",
     body: { chatId },
     initialMessages,
   });
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [activeTool, setActiveTool] = useState<{id: string, name: string} | null>(null);
+  const [showTools, setShowTools] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+
+    if (activeTool) {
+      const instruction = `\n\n[SYSTEM: The user has explicitly selected the ${activeTool.name} tool. You MUST output your response using the ${activeTool.id} tool function call.]`;
+      append({
+        role: "user",
+        content: input + instruction
+      });
+      // Clear input
+      handleInputChange({ target: { value: "" } } as any);
+      setActiveTool(null);
+    } else {
+      handleSubmit(e);
+    }
+  };
 
   return (
     <div className="flex flex-col h-full font-sans text-white bg-[#050505]">
@@ -79,7 +106,14 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                           </svg>
-                          <span>{toolInvocation.toolName === 'generateProposal' ? 'Sales Proposal' : toolInvocation.toolName === 'compareCompetitor' ? 'Competitor Analysis' : 'Meeting Prep'}</span>
+                          <span>{
+                            toolInvocation.toolName === 'generateProposal' ? 'Sales Proposal' : 
+                            toolInvocation.toolName === 'compareCompetitor' ? 'Competitor Analysis' : 
+                            toolInvocation.toolName === 'prepareMeeting' ? 'Meeting Prep' : 
+                            toolInvocation.toolName === 'generateEmail' ? 'Sales Email' :
+                            toolInvocation.toolName === 'generatePitch' ? 'Sales Pitch' : 
+                            'Tool Result'
+                          }</span>
                           {!result && <span className="ml-auto text-xs animate-pulse text-[#00D47E]/70">Generating...</span>}
                         </div>
                         
@@ -120,25 +154,78 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
 
         {/* Input Form */}
         <div className="p-4 sm:p-6 bg-[#0a0a0a] border-t border-white/5 shrink-0">
-          <form onSubmit={handleSubmit} className="relative flex items-center max-w-4xl mx-auto w-full">
-            <input
-              type="text"
-              value={input}
-              onChange={handleInputChange}
-              placeholder="Ask anything or request a proposal..."
-              className="w-full pl-4 pr-12 py-4 bg-[#111] border border-white/10 rounded-xl outline-none focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all text-white placeholder:text-zinc-500"
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="absolute right-2 p-2 rounded-lg bg-[#004225] hover:bg-[#00D47E]/40 text-[#00D47E] disabled:opacity-50 disabled:hover:bg-[#004225] transition-colors"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            </button>
-          </form>
+          <div className="max-w-4xl mx-auto w-full relative">
+            
+            {/* Active Tool Badge */}
+            {activeTool && (
+              <div className="absolute -top-10 left-0 bg-[#004225] border border-[#00D47E]/40 text-[#00D47E] text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg z-10">
+                <span className="flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  {activeTool.name}
+                </span>
+                <button 
+                  onClick={() => setActiveTool(null)}
+                  className="hover:bg-[#00D47E]/20 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            )}
+
+            {/* Tool Selection Menu */}
+            {showTools && (
+              <div className="absolute bottom-full left-0 mb-2 w-56 bg-[#111] border border-white/10 rounded-xl shadow-2xl overflow-hidden z-20 animate-in fade-in slide-in-from-bottom-2">
+                <div className="px-3 py-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider border-b border-white/5 bg-black/20">
+                  Select a tool
+                </div>
+                <div className="p-1 max-h-48 overflow-y-auto">
+                  {AVAILABLE_TOOLS.map((tool) => (
+                    <button
+                      key={tool.id}
+                      onClick={() => {
+                        setActiveTool(tool);
+                        setShowTools(false);
+                      }}
+                      className="w-full flex items-center gap-2 px-3 py-2 text-left text-sm text-zinc-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors group"
+                    >
+                      <tool.icon className="w-4 h-4 text-zinc-500 group-hover:text-[#00D47E] transition-colors" />
+                      {tool.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <form onSubmit={onFormSubmit} className="relative flex items-center">
+              <button
+                type="button"
+                onClick={() => setShowTools(!showTools)}
+                className={`absolute left-2 p-2 rounded-lg transition-colors ${showTools ? 'bg-white/10 text-white' : 'text-zinc-500 hover:text-zinc-300 hover:bg-white/5'}`}
+              >
+                <Plus className={`w-5 h-5 transition-transform ${showTools ? 'rotate-45' : ''}`} />
+              </button>
+              
+              <input
+                type="text"
+                value={input}
+                onChange={handleInputChange}
+                onFocus={() => setShowTools(false)}
+                placeholder={activeTool ? `Instruct the ${activeTool.name}...` : "Ask anything or request a proposal..."}
+                className="w-full pl-12 pr-12 py-4 bg-[#111] border border-white/10 rounded-xl outline-none focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all text-white placeholder:text-zinc-500"
+                disabled={isLoading}
+              />
+              
+              <button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                className="absolute right-2 p-2 rounded-lg bg-[#004225] hover:bg-[#00D47E]/40 text-[#00D47E] disabled:opacity-50 disabled:hover:bg-[#004225] transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

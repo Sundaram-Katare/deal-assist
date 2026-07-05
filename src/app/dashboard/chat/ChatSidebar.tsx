@@ -32,7 +32,7 @@ export default function ChatSidebar({ initialConversations }: { initialConversat
   return (
     <div className="w-80 h-full border-r border-white/5 bg-[#0a0a0a] flex flex-col">
       <div className="p-4 flex items-center justify-between border-b border-white/5">
-        <h2 className="text-lg font-bold text-white">AI Chat Inbox</h2>
+        <Link href={"/dashboard"} className="text-lg font-bold text-white">AI Chat Inbox</Link>
         <button 
           onClick={handleNewChat}
           disabled={isPending}
