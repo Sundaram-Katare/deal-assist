@@ -18,11 +18,11 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full font-sans text-white p-4 sm:p-8">
-      <div className="max-w-4xl w-full mx-auto flex flex-col h-full bg-white/5 border border-white/10 rounded-2xl overflow-hidden backdrop-blur-xl shadow-2xl">
+    <div className="flex flex-col h-full font-sans text-white bg-[#050505]">
+      <div className="flex flex-col h-full w-full mx-auto relative">
         
         {/* Chat Header */}
-        <div className="px-6 py-4 border-b border-white/10 bg-black/20 flex justify-between items-center">
+        <div className="px-6 py-4 border-b border-white/5 bg-[#0a0a0a] flex justify-between items-center shrink-0">
           <div>
             <h1 className="text-xl font-bold">Deal Assist Copilot</h1>
             <p className="text-xs text-zinc-400">Ask questions, prepare for meetings, or compare competitors.</p>
@@ -40,7 +40,7 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-2">
+              <div className="w-16 h-16 rounded-2xl bg-[#00D47E]/20 flex items-center justify-center text-[#00D47E] mb-2 border border-[#00D47E]/30">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -58,12 +58,12 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
             </div>
           ) : (
             messages.map((m: any) => (
-              <div key={m.id} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-2xl px-5 py-4 ${
-                  m.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-br-none' 
-                    : 'bg-white/10 border border-white/10 text-zinc-200 rounded-bl-none'
-                }`}>
+              <div key={m.id} className={`max-w-4xl mx-auto w-full flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-5 py-4 ${
+                    m.role === 'user' 
+                      ? 'bg-[#00D47E] text-black rounded-br-none' 
+                      : 'bg-[#004225]/20 border border-[#00D47E]/20 text-zinc-200 rounded-bl-none'
+                  }`}>
                   <div className="prose prose-invert prose-sm max-w-none">
                     <ReactMarkdown>{m.content}</ReactMarkdown>
                   </div>
@@ -75,12 +75,12 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
 
                     return (
                       <div key={toolCallId} className="mt-4 p-4 rounded-xl bg-black/40 border border-white/5">
-                        <div className="flex items-center gap-2 mb-2 text-blue-400 font-medium text-sm">
+                        <div className="flex items-center gap-2 mb-2 text-[#00D47E] font-medium text-sm">
                           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                           </svg>
                           <span>{toolInvocation.toolName === 'generateProposal' ? 'Sales Proposal' : toolInvocation.toolName === 'compareCompetitor' ? 'Competitor Analysis' : 'Meeting Prep'}</span>
-                          {!result && <span className="ml-auto text-xs animate-pulse text-zinc-400">Generating...</span>}
+                          {!result && <span className="ml-auto text-xs animate-pulse text-[#00D47E]/70">Generating...</span>}
                         </div>
                         
                         {result && result.data && (
@@ -107,11 +107,11 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
             ))
           )}
           {isLoading && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
-            <div className="flex justify-start">
-              <div className="bg-white/10 border border-white/10 rounded-2xl rounded-bl-none px-5 py-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce"></span>
-                <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                <span className="w-2 h-2 bg-zinc-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
+            <div className="max-w-4xl mx-auto w-full flex justify-start">
+              <div className="bg-[#004225]/20 border border-[#00D47E]/20 rounded-2xl rounded-bl-none px-5 py-4 flex items-center gap-2">
+                <span className="w-2 h-2 bg-[#00D47E] rounded-full animate-bounce"></span>
+                <span className="w-2 h-2 bg-[#00D47E] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
+                <span className="w-2 h-2 bg-[#00D47E] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
               </div>
             </div>
           )}
@@ -119,20 +119,20 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
         </div>
 
         {/* Input Form */}
-        <div className="p-4 border-t border-white/10 bg-black/20">
-          <form onSubmit={handleSubmit} className="relative flex items-center">
+        <div className="p-4 sm:p-6 bg-[#0a0a0a] border-t border-white/5 shrink-0">
+          <form onSubmit={handleSubmit} className="relative flex items-center max-w-4xl mx-auto w-full">
             <input
               type="text"
               value={input}
               onChange={handleInputChange}
               placeholder="Ask anything or request a proposal..."
-              className="w-full pl-4 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-white placeholder:text-zinc-500"
+              className="w-full pl-4 pr-12 py-4 bg-[#111] border border-white/10 rounded-xl outline-none focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all text-white placeholder:text-zinc-500"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={!input.trim() || isLoading}
-              className="absolute right-2 p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:hover:bg-blue-600 transition-colors"
+              className="absolute right-2 p-2 rounded-lg bg-[#004225] hover:bg-[#00D47E]/40 text-[#00D47E] disabled:opacity-50 disabled:hover:bg-[#004225] transition-colors"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />

@@ -30,13 +30,13 @@ export default function ChatSidebar({ initialConversations }: { initialConversat
   };
 
   return (
-    <div className="w-80 h-full border-r border-white/10 bg-zinc-950/50 flex flex-col backdrop-blur-xl">
+    <div className="w-80 h-full border-r border-white/5 bg-[#0a0a0a] flex flex-col">
       <div className="p-4 flex items-center justify-between border-b border-white/5">
         <h2 className="text-lg font-bold text-white">AI Chat Inbox</h2>
         <button 
           onClick={handleNewChat}
           disabled={isPending}
-          className="w-8 h-8 rounded-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center text-white transition-colors disabled:opacity-50"
+          className="w-8 h-8 rounded-full bg-[#00D47E] hover:bg-[#00D47E]/90 flex items-center justify-center text-black transition-colors disabled:opacity-50"
         >
           {isPending ? (
             <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
@@ -80,7 +80,7 @@ export default function ChatSidebar({ initialConversations }: { initialConversat
               </div>
             </div>
             <div className="text-xs text-zinc-500 truncate flex items-center gap-1">
-              <span className={`w-2 h-2 rounded-full ${activeChatId === chat.id ? 'bg-blue-500' : 'bg-zinc-600'}`}></span>
+              <span className={`w-2 h-2 rounded-full ${activeChatId === chat.id ? 'bg-[#00D47E]' : 'bg-zinc-600'}`}></span>
               {activeChatId === chat.id ? 'Active' : 'Closed'}
             </div>
           </Link>
