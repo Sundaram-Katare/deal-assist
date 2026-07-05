@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import { prisma } from "../../lib/prisma";
+import ReviewCard from "./ReviewCard";  
 import Link from "next/link";
 import { 
   UploadCloud, 
@@ -204,33 +205,7 @@ export default async function DashboardPage() {
         {/* Bottom Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          {/* Recent Conversations */}
-          <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 flex flex-col hover:border-white/10 transition-colors">
-            <div className="flex items-center gap-2 mb-6">
-              <MessageSquare className="w-4 h-4 text-[#00D47E]" />
-              <h3 className="font-semibold text-white text-sm">Recent Conversations</h3>
-            </div>
-            <div className="space-y-4 flex-1">
-              {[
-                { title: "Compare with HubSpot", time: "2m ago" },
-                { title: "Pricing for Enterprise Plan", time: "1h ago" },
-                { title: "Healthcare Industry Use Case", time: "3h ago" },
-                { title: "Objection: Too Expensive", time: "1d ago" },
-                { title: "Integration with Salesforce", time: "2d ago" },
-              ].map((chat, i) => (
-                <div key={i} className="flex items-center justify-between group cursor-pointer">
-                  <div className="flex items-center gap-2 overflow-hidden">
-                    <MessageSquare className="w-3 h-3 text-zinc-500 shrink-0" />
-                    <span className="text-xs text-zinc-300 truncate group-hover:text-white transition-colors">{chat.title}</span>
-                  </div>
-                  <span className="text-[10px] text-zinc-600 shrink-0 ml-2">{chat.time}</span>
-                </div>
-              ))}
-            </div>
-            <button className="mt-6 w-full text-xs font-medium text-zinc-300 bg-white/[0.02] hover:bg-white/5 border border-white/5 px-3 py-2 rounded-lg flex items-center justify-center gap-1 transition-colors">
-              View All <ArrowRight className="w-3 h-3" />
-            </button>
-          </div>
+          <ReviewCard />
 
           {/* Quick Links */}
           <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 flex flex-col hover:border-white/10 transition-colors">
@@ -246,51 +221,13 @@ export default async function DashboardPage() {
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
               </Link>
-              <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 cursor-pointer transition-colors flex items-center justify-between group">
+              <Link href="/dashboard/documentation" className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/5 cursor-pointer transition-colors flex items-center justify-between group block">
                 <div>
                   <div className="text-xs font-semibold text-[#00D47E] mb-1">Documentation</div>
                   <div className="text-[10px] text-zinc-500">Learn how to get the most out of Deal Assist</div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
-              </div>
-            </div>
-          </div>
-
-          {/* Knowledge Base Stats */}
-          <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 flex flex-col hover:border-white/10 transition-colors">
-            <div className="flex items-center gap-2 mb-6">
-              <BarChart2 className="w-4 h-4 text-[#00D47E]" />
-              <h3 className="font-semibold text-white text-sm">Knowledge Base Stats</h3>
-            </div>
-            <div className="space-y-4 flex-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded bg-blue-500/10 flex items-center justify-center"><FileText className="w-3 h-3 text-blue-400" /></div>
-                  <span className="text-xs text-zinc-300">Documents</span>
-                </div>
-                <span className="text-sm font-semibold">128</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded bg-purple-500/10 flex items-center justify-center"><AlignLeft className="w-3 h-3 text-purple-400" /></div>
-                  <span className="text-xs text-zinc-300">Chunks Indexed</span>
-                </div>
-                <span className="text-sm font-semibold">24,532</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded bg-rose-500/10 flex items-center justify-center"><Database className="w-3 h-3 text-rose-400" /></div>
-                  <span className="text-xs text-zinc-300">Storage Used</span>
-                </div>
-                <span className="text-sm font-semibold">3.2 GB</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded bg-amber-500/10 flex items-center justify-center"><Users className="w-3 h-3 text-amber-400" /></div>
-                  <span className="text-xs text-zinc-300">Team Members</span>
-                </div>
-                <span className="text-sm font-semibold">12</span>
-              </div>
+              </Link>
             </div>
           </div>
 

@@ -2,8 +2,9 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { createConversation } from "./actions";
+import { createConversation, updateChatTitle } from "./actions";
 import Link from "next/link";
+import { Edit2, Check } from "lucide-react";
 
 type Conversation = {
   id: string;
@@ -17,6 +18,22 @@ export default function ChatSidebar({ initialConversations }: { initialConversat
   const activeChatId = params?.chatId as string;
   
   const [isPending, startTransition] = useTransition();
+  const [editingChatId, setEditingChatId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+
+  const handleEditSave = async (chatId: string) => {
+    if (!editTitle.trim()) {
+      setEditingChatId(null);
+      return;
+    }
+    try {
+      await updateChatTitle(chatId, editTitle);
+      setEditingChatId(null);
+      router.refresh();
+    } catch (error) {
+      console.error("Failed to update chat title", error);
+    }
+  };
 
   const handleNewChat = () => {
     startTransition(async () => {
@@ -64,26 +81,60 @@ export default function ChatSidebar({ initialConversations }: { initialConversat
       <div className="flex-1 overflow-y-auto px-2 space-y-1 pb-4">
         <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2 mb-2 mt-2">History</div>
         {initialConversations.map((chat) => (
-          <Link 
+          <div 
             key={chat.id} 
-            href={`/dashboard/chat/${chat.id}`}
-            className={`block px-3 py-3 rounded-lg transition-colors ${
+            className={`block px-3 py-3 rounded-lg transition-colors group ${
               activeChatId === chat.id ? 'bg-white/10 border border-white/5' : 'hover:bg-white/5 border border-transparent'
             }`}
           >
             <div className="flex justify-between items-start mb-1">
-              <div className="text-sm font-medium text-zinc-200 truncate pr-2">
-                {chat.title || "New Conversation"}
+              <div className="text-sm font-medium text-zinc-200 truncate pr-2 flex-1">
+                {editingChatId === chat.id ? (
+                  <div className="flex items-center gap-2">
+                    <input 
+                      type="text" 
+                      autoFocus
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleEditSave(chat.id);
+                        if (e.key === 'Escape') setEditingChatId(null);
+                      }}
+                      className="w-full bg-[#111] border border-[#00D47E]/30 rounded px-1.5 py-0.5 text-xs text-white outline-none focus:border-[#00D47E]"
+                    />
+                    <button onClick={() => handleEditSave(chat.id)} className="text-[#00D47E] hover:text-white">
+                      <Check className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <Link href={`/dashboard/chat/${chat.id}`} className="hover:text-white truncate block">
+                    {chat.title || "New Conversation"}
+                  </Link>
+                )}
               </div>
-              <div className="text-[10px] text-zinc-500 whitespace-nowrap mt-0.5">
-                {new Date(chat.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+              <div className="flex items-center gap-2">
+                {editingChatId !== chat.id && (
+                  <button 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setEditingChatId(chat.id);
+                      setEditTitle(chat.title || "New Conversation");
+                    }}
+                    className="opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-white transition-opacity"
+                  >
+                    <Edit2 className="w-3 h-3" />
+                  </button>
+                )}
+                <div className="text-[10px] text-zinc-500 whitespace-nowrap mt-0.5">
+                  {new Date(chat.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                </div>
               </div>
             </div>
             <div className="text-xs text-zinc-500 truncate flex items-center gap-1">
               <span className={`w-2 h-2 rounded-full ${activeChatId === chat.id ? 'bg-[#00D47E]' : 'bg-zinc-600'}`}></span>
               {activeChatId === chat.id ? 'Active' : 'Closed'}
             </div>
-          </Link>
+          </div>
         ))}
         {initialConversations.length === 0 && (
           <div className="text-center px-4 py-8 text-sm text-zinc-500">

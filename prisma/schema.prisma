@@ -26,6 +26,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   memberships   Membership[]
+  feedbacks     Feedback[]
 }
 
 model Account {
@@ -109,4 +110,13 @@ model Message {
 enum Role {
   ADMIN
   MEMBER
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String
+  rating    Int
+  text      String?  @db.Text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
 }

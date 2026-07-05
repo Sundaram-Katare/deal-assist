@@ -87,3 +87,30 @@ export async function createConversation(title?: string) {
 
   return newChat.id;
 }
+
+export async function updateChatTitle(chatId: string, title: string) {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const membership = await prisma.membership.findFirst({
+    where: { userId: session.user.id },
+  });
+
+  if (!membership?.orgId) {
+    throw new Error("User must belong to an organization.");
+  }
+
+  // Ensure user can only rename their own organization's chat
+  await prisma.conversation.updateMany({
+    where: { 
+      id: chatId,
+      orgId: membership.orgId
+    },
+    data: { title }
+  });
+
+  return { success: true };
+}
