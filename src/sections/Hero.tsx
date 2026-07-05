@@ -11,7 +11,7 @@ export default function Hero() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D47E]/20 rounded-full blur-[120px] opacity-50 pointer-events-none"></div>
       
       <div className="container mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -19,7 +19,7 @@ export default function Hero() {
         >
           <span className="w-2 h-2 rounded-full bg-[#00D47E] animate-pulse"></span>
           Deal Assist v2.0 is live
-        </motion.div>
+        </motion.div> */}
 
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
@@ -54,12 +54,12 @@ export default function Hero() {
             Start Free
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link 
+          {/* <Link 
             href="/contact" 
             className="w-full sm:w-auto px-8 py-4 rounded-full bg-white hover:bg-zinc-200 text-black font-semibold transition-all flex items-center justify-center"
           >
             Book Demo
-          </Link>
+          </Link> */}
         </motion.div>
       </div>
     </section>

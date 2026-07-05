@@ -11,7 +11,7 @@ export default function Footer() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <span className="text-lg font-bold text-white tracking-tight">Deal Assist</span>
+            <span className="text-lg font-bold text-white tracking-tight">SellGenie</span>
           </div>
 
           <div className="flex items-center gap-6 text-sm text-zinc-500">
@@ -21,7 +21,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 text-center text-zinc-600 text-xs">
-          &copy; {new Date().getFullYear()} Deal Assist Copilot. All rights reserved.
+          &copy; {new Date().getFullYear()} SellGenie. All rights reserved.
         </div>
       </div>
     </footer>

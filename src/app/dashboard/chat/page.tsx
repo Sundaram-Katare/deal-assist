@@ -21,7 +21,7 @@ export default function ChatRootPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 p-8">
-      <div className="w-16 h-16 rounded-2xl bg-blue-500/20 flex items-center justify-center text-blue-400 mb-2">
+      <div className="w-16 h-16 rounded-2xl bg-[#00D47E]/20 flex items-center justify-center text-[#00D47E] mb-2">
         <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
@@ -32,7 +32,7 @@ export default function ChatRootPage() {
       <button 
         onClick={handleNewChat}
         disabled={isPending}
-        className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors flex items-center gap-2"
+        className="mt-6 px-6 py-3 bg-[#00D47E] hover:bg-[#00D47E]/50 text-white font-medium rounded-xl transition-colors flex items-center gap-2"
       >
         {isPending ? (
            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>

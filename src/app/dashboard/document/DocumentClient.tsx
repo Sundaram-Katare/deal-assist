@@ -97,7 +97,7 @@ export default function DocumentClient({ initialDocuments }: DocumentClientProps
           <button
             type="submit"
             disabled={!file || loading}
-            className="w-full py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 rounded-lg bg-[#00D47E] hover:bg-[#00D47E]/50 text-white font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Processing..." : "Upload & Ingest"}
           </button>

@@ -51,7 +51,7 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
         {/* Chat Header */}
         <div className="px-6 py-4 border-b border-white/5 bg-[#0a0a0a] flex justify-between items-center shrink-0">
           <div>
-            <h1 className="text-xl font-bold">Deal Assist Copilot</h1>
+            <h1 className="text-xl font-bold">SellGenie AI</h1>
             <p className="text-xs text-zinc-400">Ask questions, prepare for meetings, or compare competitors.</p>
           </div>
           <div className="flex items-center gap-2">

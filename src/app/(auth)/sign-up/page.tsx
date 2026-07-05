@@ -55,10 +55,9 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-950 p-4 font-sans text-white relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#050505] p-4 font-sans text-white relative overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-blue-600/20 blur-[120px]" />
-      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#00D47E]/20 rounded-full blur-[120px] opacity-50 pointer-events-none" />
 
       <div className="w-full max-w-md p-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl relative z-10">
         <div className="text-center mb-8">
@@ -79,7 +78,7 @@ export default function SignUpPage() {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none text-white placeholder:text-zinc-500"
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all outline-none text-white placeholder:text-zinc-500"
               placeholder="John Doe"
               required
             />
@@ -90,7 +89,7 @@ export default function SignUpPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none text-white placeholder:text-zinc-500"
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all outline-none text-white placeholder:text-zinc-500"
               placeholder="you@example.com"
               required
             />
@@ -101,7 +100,7 @@ export default function SignUpPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all outline-none text-white placeholder:text-zinc-500"
+              className="w-full px-4 py-3 rounded-lg bg-black/50 border border-white/10 focus:border-[#00D47E] focus:ring-1 focus:ring-[#00D47E] transition-all outline-none text-white placeholder:text-zinc-500"
               placeholder="••••••••"
               required
               minLength={6}
@@ -110,7 +109,7 @@ export default function SignUpPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 rounded-lg bg-white text-black font-semibold hover:bg-zinc-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 rounded-lg bg-[#00D47E] text-black font-semibold hover:bg-[#00D47E]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>
@@ -149,7 +148,7 @@ export default function SignUpPage() {
 
         <p className="mt-8 text-center text-sm text-zinc-400">
           Already have an account?{" "}
-          <Link href="/sign-in" className="text-white hover:underline">
+          <Link href="/sign-in" className="text-[#00D47E] hover:underline">
             Sign in
           </Link>
         </p>

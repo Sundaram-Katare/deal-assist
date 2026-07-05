@@ -1,24 +1,25 @@
-import { withAuth } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    const token = req.nextauth.token;
-    const path = req.nextUrl.pathname;
+export async function middleware(req: NextRequest) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const path = req.nextUrl.pathname;
 
-    // We need to fetch user's org info from DB if possible, but middleware is edge so we can't use Prisma easily.
-    // Instead, we will handle onboarding redirection in a layout or specific page.
-    
-    // For now, let's just let authenticated users access /onboarding and /dashboard
-    return NextResponse.next();
-  },
-  {
-    callbacks: {
-      authorized: ({ token }) => !!token,
-    },
+  const isAuthPage = path.startsWith("/sign-in") || path.startsWith("/sign-up") || path === "/";
+  const isProtectedRoute = path.startsWith("/dashboard") || path.startsWith("/onboarding");
+
+  if (token && isAuthPage) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
-);
+
+  if (!token && isProtectedRoute) {
+    return NextResponse.redirect(new URL("/sign-in", req.url));
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding/:path*"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.png).*)"],
 };

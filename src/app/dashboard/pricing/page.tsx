@@ -19,7 +19,7 @@ export default function PricingPage() {
         <div className="rounded-3xl bg-[#0a0a0a] border border-white/10 p-8 md:p-10 flex flex-col hover:border-white/20 transition-all shadow-xl">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-white mb-2">Starter</h2>
-            <p className="text-zinc-400 text-sm h-10">Perfect for individuals wanting to test the waters with Deal Assist.</p>
+            <p className="text-zinc-400 text-sm h-10">Perfect for individuals wanting to test the waters with SellGenie.</p>
           </div>
           
           <div className="mb-8 pb-8 border-b border-white/10">

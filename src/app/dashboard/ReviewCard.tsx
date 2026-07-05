@@ -51,7 +51,7 @@ export default function ReviewCard() {
           <h3 className="font-semibold text-white text-lg">Rate Your Experience</h3>
         </div>
         <p className="text-sm text-zinc-400 mb-6 relative z-10 max-w-sm">
-          We are constantly improving Deal Assist. Let us know how we're doing and what features you'd love to see next.
+          We are constantly improving SellGenie. Let us know how we're doing and what features you'd love to see next.
         </p>
         
         <div className="mt-auto flex items-center justify-between relative z-10">

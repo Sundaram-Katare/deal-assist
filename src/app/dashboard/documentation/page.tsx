@@ -15,7 +15,7 @@ export default function Documentation() {
                 Documentation is <span className="text-[#00D47E]">coming soon</span>...
             </h1>
             <p className="text-zinc-400 text-center max-w-md">
-                We're actively building comprehensive guides and tutorials to help you master Deal Assist. Stay tuned!
+                We're actively building comprehensive guides and tutorials to help you master SellGenie. Stay tuned!
             </p>
         </div>
     )
