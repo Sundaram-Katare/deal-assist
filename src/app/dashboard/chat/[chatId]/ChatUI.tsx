@@ -67,12 +67,13 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-              <div className="w-16 h-16 rounded-2xl bg-[#00D47E]/20 flex items-center justify-center text-[#00D47E] mb-2 border border-[#00D47E]/30">
+              {/* <div className="w-16 h-16 rounded-2xl bg-[#00D47E]/20 flex items-center justify-center text-[#00D47E] mb-2 border border-[#00D47E]/30">
                 <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-              </div>
-              <h2 className="text-2xl font-semibold">How can I help you close today?</h2>
+              </div> */}
+              <img src="/logo.png" className="h-18" alt="" />
+              <h2 className="text-2xl font-semibold">How can I help you today?</h2>
               <p className="text-zinc-400 max-w-md">Try asking me to generate a proposal, compare us to a competitor, or just ask a question about our products.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-left w-full max-w-lg">
                 <button onClick={() => handleInputChange({ target: { value: "Can you generate a proposal for Acme Corp?" } } as any)} className="p-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-sm text-zinc-300 transition-colors">

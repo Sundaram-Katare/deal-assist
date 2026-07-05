@@ -47,6 +47,10 @@ export default async function DashboardPage() {
     redirect("/onboarding");
   }
 
+  const documentCount = await prisma.document.count({
+    where: { orgId: membership.orgId }
+  });
+
   const firstName = session.user.name?.split(" ")[0] || session.user.email?.split("@")[0] || "User";
 
   return (
@@ -57,7 +61,7 @@ export default async function DashboardPage() {
         <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
-              Welcome back, {firstName}! 👋
+              Welcome back, {firstName} ! 
             </h1>
             <p className="text-zinc-400 mb-2">
               Here's what's happening with your sales knowledge hub.
@@ -157,7 +161,7 @@ export default async function DashboardPage() {
             </div>
             
             <div className="mt-auto mb-6">
-              <div className="text-6xl font-bold text-white tracking-tight mb-2">128</div>
+              <div className="text-6xl font-bold text-white tracking-tight mb-2">{documentCount}</div>
               <div className="text-zinc-400 font-medium">Documents</div>
             </div>
 

@@ -115,7 +115,7 @@ export default function SignUpPage() {
           </button>
         </form>
 
-        <div className="mt-6 flex items-center justify-between">
+        {/* <div className="mt-6 flex items-center justify-between">
           <div className="h-px flex-1 bg-white/10"></div>
           <span className="px-4 text-sm text-zinc-500">or continue with</span>
           <div className="h-px flex-1 bg-white/10"></div>
@@ -144,7 +144,7 @@ export default function SignUpPage() {
             />
           </svg>
           Google
-        </button>
+        </button> */}
 
         <p className="mt-8 text-center text-sm text-zinc-400">
           Already have an account?{" "}
