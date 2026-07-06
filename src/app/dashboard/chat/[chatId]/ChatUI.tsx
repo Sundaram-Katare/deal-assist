@@ -72,7 +72,7 @@ export default function ChatUI({ chatId, initialMessages }: { chatId: string, in
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div> */}
-              <img src="/logo.png" className="h-18" alt="" />
+              <img src="/logo.png" className="h-18" alt="" /> 
               <h2 className="text-2xl font-semibold">How can I help you today?</h2>
               <p className="text-zinc-400 max-w-md">Try asking me to generate a proposal, compare us to a competitor, or just ask a question about our products.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-left w-full max-w-lg">
