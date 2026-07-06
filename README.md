@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SellGenie 🧞‍♂️
 
-## Getting Started
+SellGenie is an advanced AI-powered sales copilot designed to help modern B2B sales teams close deals faster. By securely uploading your organization's sales playbooks, competitor battlecards, and past proposals, SellGenie provides your sales reps with an intelligent chat interface to instantly generate proposals, compare competitors, handle objections, and prepare for meetings.
 
-First, run the development server:
+## 🚀 Features
 
+- **Multi-Tenant Architecture:** Securely isolate data using Organizations. Users join a specific organization and only interact with their team's data.
+- **Intelligent Document Ingestion:** Upload PDFs, DOCX files, and text documents. SellGenie automatically chunks and vectorizes your documents for semantic search.
+- **AI Sales Copilot:** A sleek, ChatGPT-like interface where sales reps can ask questions and get answers grounded strictly in your organization's uploaded documents.
+- **Pre-Built Sales Tools:** One-click shortcuts for generating proposals, comparing competitors, extracting key points, and handling objections.
+- **Secure Authentication:** Full authentication flow using NextAuth (Credentials & Google OAuth) with edge middleware protection for private routes.
+- **Beautiful Dark UI:** Premium, modern UI built with Tailwind CSS, Framer Motion, and Lucide Icons.
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js 14](https://nextjs.org/) (App Router)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) & [Framer Motion](https://www.framer.com/motion/)
+- **Database:** PostgreSQL (with [Prisma ORM](https://www.prisma.io/))
+- **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+- **AI & RAG:** [Vercel AI SDK](https://sdk.vercel.ai/docs), [LangChain](https://js.langchain.com/docs/), and Vector Database for Retrieval-Augmented Generation.
+- **Validation:** [Zod](https://zod.dev/)
+
+## ⚙️ Getting Started
+
+### Prerequisites
+Make sure you have Node.js (v18+) and npm installed on your machine. You will also need a PostgreSQL database (local or hosted, e.g., Supabase or Neon) and your LLM / Vector DB credentials.
+
+### 1. Clone & Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/sellgenie.git
+cd sellgenie
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Create a `.env` file in the root directory and add the following keys. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/sellgenie"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-random-secret-key"
 
-## Learn More
+# Google OAuth (Optional)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-To learn more about Next.js, take a look at the following resources:
+# AI & Vector DB 
+OPENAI_API_KEY="sk-..."
+# Add your Vector DB keys here (e.g., Qdrant, Pinecone)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 3. Database Setup
+Push the Prisma schema to your database to create the necessary tables:
+```bash
+npx prisma db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 4. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the landing page.
 
-## Deploy on Vercel
+## 📁 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/src/app`: Next.js App Router pages (Dashboard, Auth, Landing).
+- `/src/app/api`: API routes for authentication, AI chat streaming, and document ingestion.
+- `/src/sections`: Reusable UI sections for the landing page (Hero, Features, Footer).
+- `/src/lib`: Core utilities (Prisma client, chunking logic, LLM helpers).
+- `/prisma`: Database schema and migration files.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛡️ Authentication & Middleware
+
+SellGenie uses `next-auth/middleware` to protect sensitive routes. 
+- `/dashboard/*` and `/onboarding/*` require an active session.
+- If an authenticated user attempts to visit the landing page or login pages, they are securely redirected to the dashboard.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
