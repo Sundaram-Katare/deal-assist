@@ -45,8 +45,11 @@ export async function extractTextFromFile(file: File): Promise<string> {
             throw new Error("No text could be extracted from the document.");
         }
         return cleanText(rawText);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error parsing document:", error);
+        if (error instanceof Error) {
+            throw error;
+        }
         throw new Error("Failed to parse document content.");
     }
 }
