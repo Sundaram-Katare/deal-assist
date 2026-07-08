@@ -1,5 +1,5 @@
 import { createOpenAI } from '@ai-sdk/openai';
-import { streamText } from 'ai';
+import { streamText, convertToCoreMessages } from 'ai';
 import { retrieveContext } from '@/actions/retrieval';
 import { z } from 'zod';
 import { getServerSession } from "next-auth/next";
@@ -76,7 +76,7 @@ INSTRUCTIONS:
   const result = await streamText({
     model: groq(MODEL) as any,
     system: systemPrompt,
-    messages: messages as any[],
+    messages: convertToCoreMessages(messages),
     temperature: 0.2,
     maxSteps: 5,
     tools: {
