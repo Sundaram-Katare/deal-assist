@@ -3,6 +3,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 export async function getConversations() {
   const session = await getServerSession(authOptions);
@@ -42,7 +43,7 @@ export async function getConversationMessages(chatId: string) {
     throw new Error("User must belong to an organization.");
   }
 
-  // Ensure the conversation belongs to the user's organization
+  
   const conversation = await prisma.conversation.findFirst({
     where: { 
       id: chatId,
@@ -103,7 +104,7 @@ export async function updateChatTitle(chatId: string, title: string) {
     throw new Error("User must belong to an organization.");
   }
 
-  // Ensure user can only rename their own organization's chat
+  
   await prisma.conversation.updateMany({
     where: { 
       id: chatId,
@@ -112,5 +113,81 @@ export async function updateChatTitle(chatId: string, title: string) {
     data: { title }
   });
 
+  return { success: true };
+}
+
+export async function deleteConversation(chatId: string) {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const membership = await prisma.membership.findFirst({
+    where: { userId: session.user.id },
+  });
+
+  if (!membership?.orgId) {
+    throw new Error("User must belong to an organization.");
+  }
+
+  // Ensure conversation belongs to user's organization
+  const conversation = await prisma.conversation.findFirst({
+    where: {
+      id: chatId,
+      orgId: membership.orgId,
+    },
+  });
+
+  if (!conversation) {
+    throw new Error("Conversation not found or unauthorized.");
+  }
+
+  // Delete all messages first (foreign key dependency)
+  await prisma.message.deleteMany({
+    where: { conversationId: chatId },
+  });
+
+  // Delete the conversation
+  await prisma.conversation.delete({
+    where: { id: chatId },
+  });
+
+  revalidatePath("/dashboard/chat");
+  return { success: true };
+}
+
+export async function deleteAllConversations() {
+  const session = await getServerSession(authOptions);
+  
+  if (!session?.user?.id) {
+    throw new Error("Unauthorized");
+  }
+
+  const membership = await prisma.membership.findFirst({
+    where: { userId: session.user.id },
+  });
+
+  if (!membership?.orgId) {
+    throw new Error("User must belong to an organization.");
+  }
+
+  // Delete all messages belonging to organization's conversations
+  await prisma.message.deleteMany({
+    where: {
+      conversation: {
+        orgId: membership.orgId,
+      },
+    },
+  });
+
+  // Delete all conversations belonging to organization
+  await prisma.conversation.deleteMany({
+    where: {
+      orgId: membership.orgId,
+    },
+  });
+
+  revalidatePath("/dashboard/chat");
   return { success: true };
 }

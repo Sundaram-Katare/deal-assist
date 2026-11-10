@@ -1,32 +1,49 @@
-import { HfInference } from "@huggingface/inference";
+import { pipeline, env } from "@xenova/transformers";
 
-const hf = new HfInference(process.env.HUGGINGFACE_API_KEY);
+// Configure Transformers.js for server-side Next.js
+env.allowLocalModels = false;
+env.useBrowserCache = false;
 
-const EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2";
+// Lazy-load the feature-extraction pipeline singleton so it initializes only once in memory
+let extractorPromise: Promise<any> | null = null;
 
+async function getExtractor() {
+  if (!extractorPromise) {
+    extractorPromise = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+  }
+  return extractorPromise;
+}
 
 export async function generateEmbeddings(texts: string[]): Promise<number[][]> {
-    if (!texts || texts.length == 0) {
-        return [];
-    }
+  if (!texts || texts.length === 0) {
+    return [];
+  }
 
-    try {
-        // We use featureExtraction to get the embeddings
-        const output = await hf.featureExtraction({
-            model: EMBEDDING_MODEL,
-            inputs: texts,
-        });
-        // The Hugging Face API returns a 1D, 2D, or 3D array depending on the input shape.
-        // For an array of strings, it returns a 2D array (number[][]).
-        // We ensure we cast it correctly.
-        return output as number[][];
-    } catch (error) {
-        console.error("Error generating embeddings:", error);
-        throw new Error("Failed to generate vector embeddings.");
+  try {
+    const extractor = await getExtractor();
+    const output = await extractor(texts, { pooling: "mean", normalize: true });
+    const list = output.tolist();
+    if (Array.isArray(list) && list.length > 0 && !Array.isArray(list[0])) {
+      return [list as unknown as number[]];
     }
+    return list as number[][];
+  } catch (error) {
+    console.error("Error generating embeddings:", error);
+    throw new Error("Failed to generate vector embeddings.");
+  }
 }
 
 export async function generateSingleEmbedding(text: string): Promise<number[]> {
-    const embeddings = await generateEmbeddings([text]);
-    return embeddings[0];
+  try {
+    const extractor = await getExtractor();
+    const output = await extractor(text, { pooling: "mean", normalize: true });
+    if (output.data) {
+      return Array.from(output.data);
+    }
+    const list = output.tolist();
+    return Array.isArray(list[0]) ? list[0] : list;
+  } catch (error) {
+    console.error("Error generating single embedding:", error);
+    throw new Error("Failed to generate vector embedding.");
+  }
 }

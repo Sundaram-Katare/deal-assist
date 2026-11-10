@@ -11,7 +11,7 @@ const groq = createOpenAI({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-const MODEL = "llama-3.1-8b-instant";
+const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
@@ -52,10 +52,11 @@ export async function POST(req: Request) {
     }
   }
 
-  // RAG: Retrieve context
+  
   let context = "";
   try {
-    context = await retrieveContext(userQuestion);
+    context = await retrieveContext(userQuestion, orgId);
+    console.log(`Context retrieved successfully (length: ${context.length} chars)`);
   } catch (error) {
     console.error("Context retrieval error:", error);
   }
@@ -73,123 +74,129 @@ INSTRUCTIONS:
 3. If the user explicitly selects a tool (e.g. Generate Proposal, Email Generator, Sales Pitch Generator), or asks for one of these outputs, you MUST use the corresponding tool to output structured JSON data. Do not output raw text for these tasks.
   `;
 
-  const result = await streamText({
-    model: groq(MODEL) as any,
-    system: systemPrompt,
-    messages: convertToCoreMessages(messages),
-    temperature: 0.2,
-    maxSteps: 5,
-    tools: {
-      generateProposal: {
-        description: 'Generate a structured sales proposal for a client based on the context.',
-        parameters: z.object({
-          clientName: z.string().optional().describe('The name of the prospective client'),
-          executiveSummary: z.string().optional().describe('A persuasive 2-sentence summary'),
-          proposedSolution: z.string().optional().describe('The specific product/service recommended'),
-          pricingEstimate: z.string().optional().describe('Estimated cost based on context'),
-          nextSteps: z.array(z.string()).optional().describe('List of actionable next steps'),
-        }),
-        execute: async (proposalData: any) => {
-          return { success: true, data: proposalData };
-        },
+  try {
+    const result = await streamText({
+      model: groq(MODEL) as any,
+      system: systemPrompt,
+      messages: convertToCoreMessages(messages),
+      temperature: 0.2,
+      maxSteps: 5,
+      tools: {
+        generateProposal: {
+          description: 'Generate a structured sales proposal for a client based on the context.',
+          parameters: z.object({
+            clientName: z.string().optional().describe('The name of the prospective client'),
+            executiveSummary: z.string().optional().describe('A persuasive 2-sentence summary'),
+            proposedSolution: z.string().optional().describe('The specific product/service recommended'),
+            pricingEstimate: z.string().optional().describe('Estimated cost based on context'),
+            nextSteps: z.array(z.string()).optional().describe('List of actionable next steps'),
+          }),
+          execute: async (proposalData: any) => {
+            return { success: true, data: proposalData };
+          },
+        } as any,
+        generateEmail: {
+          description: 'Generate a structured sales email (outreach or follow-up).',
+          parameters: z.object({
+            subject: z.string().optional().describe('A catchy, concise email subject'),
+            body: z.string().optional().describe('The main content of the email, well-structured'),
+            callToAction: z.string().optional().describe('A clear next step or question to prompt a reply'),
+            receiver: z.string().optional(),
+            sender: z.string().optional(),
+          }),
+          execute: async (emailData: any) => {
+            return { success: true, data: emailData };
+          },
+        } as any,
+        generatePitch: {
+          description: 'Generate a structured sales pitch.',
+          parameters: z.object({
+            hook: z.string().optional().describe('An attention-grabbing opening sentence'),
+            valueProposition: z.string().optional().describe('The core value provided to the prospect'),
+            keyDifferentiator: z.string().optional().describe('Why we are better than the competition'),
+            closingQuestion: z.string().optional().describe('A question to transition into a conversation'),
+          }),
+          execute: async (pitchData: any) => {
+            return { success: true, data: pitchData };
+          },
+        } as any,
+        compareCompetitor: {
+          description: 'Generate a structured comparison against a specific competitor.',
+          parameters: z.object({
+            competitorName: z.string().optional(),
+            ourStrengths: z.array(z.string()).optional(),
+            theirWeaknesses: z.array(z.string()).optional(),
+            killPhrase: z.string().optional().describe('A 1-sentence powerful statement to win the deal'),
+          }),
+          execute: async (comparisonData: any) => {
+            return { success: true, data: comparisonData };
+          },
+        } as any,
+        prepareMeeting: {
+          description: 'Generate a structured meeting preparation brief.',
+          parameters: z.object({
+            prospectName: z.string().optional(),
+            keyObjectives: z.array(z.string()).optional(),
+            questionsToAsk: z.array(z.string()).optional(),
+            potentialObjections: z.array(z.string()).optional(),
+          }),
+          execute: async (prepData: any) => {
+            return { success: true, data: prepData };
+          },
+        } as any
       } as any,
-      generateEmail: {
-        description: 'Generate a structured sales email (outreach or follow-up).',
-        parameters: z.object({
-          subject: z.string().optional().describe('A catchy, concise email subject'),
-          body: z.string().optional().describe('The main content of the email, well-structured'),
-          callToAction: z.string().optional().describe('A clear next step or question to prompt a reply'),
-          receiver: z.string().optional(),
-          sender: z.string().optional(),
-        }),
-        execute: async (emailData: any) => {
-          return { success: true, data: emailData };
-        },
-      } as any,
-      generatePitch: {
-        description: 'Generate a structured sales pitch.',
-        parameters: z.object({
-          hook: z.string().optional().describe('An attention-grabbing opening sentence'),
-          valueProposition: z.string().optional().describe('The core value provided to the prospect'),
-          keyDifferentiator: z.string().optional().describe('Why we are better than the competition'),
-          closingQuestion: z.string().optional().describe('A question to transition into a conversation'),
-        }),
-        execute: async (pitchData: any) => {
-          return { success: true, data: pitchData };
-        },
-      } as any,
-      compareCompetitor: {
-        description: 'Generate a structured comparison against a specific competitor.',
-        parameters: z.object({
-          competitorName: z.string().optional(),
-          ourStrengths: z.array(z.string()).optional(),
-          theirWeaknesses: z.array(z.string()).optional(),
-          killPhrase: z.string().optional().describe('A 1-sentence powerful statement to win the deal'),
-        }),
-        execute: async (comparisonData: any) => {
-          return { success: true, data: comparisonData };
-        },
-      } as any,
-      prepareMeeting: {
-        description: 'Generate a structured meeting preparation brief.',
-        parameters: z.object({
-          prospectName: z.string().optional(),
-          keyObjectives: z.array(z.string()).optional(),
-          questionsToAsk: z.array(z.string()).optional(),
-          potentialObjections: z.array(z.string()).optional(),
-        }),
-        execute: async (prepData: any) => {
-          return { success: true, data: prepData };
-        },
-      } as any
-    } as any,
-    onFinish: async ({ text, toolCalls, toolResults }) => {
-      let finalContent = text || "";
-      
-      if (toolCalls && toolCalls.length > 0) {
-        const toolContent = toolCalls.map((tc: any) => {
-          const res = toolResults?.find((tr: any) => tr.toolCallId === tc.toolCallId);
-          if (res && res.result && res.result.data) {
-             const data = res.result.data;
-             const toolNames: Record<string, string> = {
-               generateProposal: 'Sales Proposal',
-               generateEmail: 'Sales Email',
-               generatePitch: 'Sales Pitch',
-               compareCompetitor: 'Competitor Analysis',
-               prepareMeeting: 'Meeting Prep'
-             };
-             const title = toolNames[tc.toolName] || 'Tool Result';
-             
-             let markdown = `\n\n### ⚡ ${title}\n\n`;
-             for (const [key, value] of Object.entries(data)) {
-               const formattedKey = key.replace(/([A-Z])/g, ' $1').trim().toUpperCase();
-               if (Array.isArray(value)) {
-                 markdown += `**${formattedKey}**\n${value.map(v => `- ${v}`).join('\n')}\n\n`;
-               } else {
-                 markdown += `**${formattedKey}**\n${value}\n\n`;
-               }
-             }
-             return markdown;
-          }
-          return "";
-        }).join("");
+      onFinish: async ({ text, toolCalls, toolResults }) => {
+        let finalContent = text || "";
         
-        finalContent += toolContent;
-      }
-      
-      if (chatId && finalContent.trim()) {
-        await prisma.message.create({
-          data: {
-            conversationId: chatId,
-            role: "assistant",
-            content: finalContent.trim(),
-          }
-        });
-      }
-    },
-  });
+        if (toolCalls && toolCalls.length > 0) {
+          const toolContent = toolCalls.map((tc: any) => {
+            const res = toolResults?.find((tr: any) => tr.toolCallId === tc.toolCallId);
+            if (res && res.result && res.result.data) {
+               const data = res.result.data;
+               const toolNames: Record<string, string> = {
+                 generateProposal: 'Sales Proposal',
+                 generateEmail: 'Sales Email',
+                 generatePitch: 'Sales Pitch',
+                 compareCompetitor: 'Competitor Analysis',
+                 prepareMeeting: 'Meeting Prep'
+               };
+               const title = toolNames[tc.toolName] || 'Tool Result';
+               
+               let markdown = `\n\n### ⚡ ${title}\n\n`;
+               for (const [key, value] of Object.entries(data)) {
+                 const formattedKey = key.replace(/([A-Z])/g, ' $1').trim().toUpperCase();
+                 if (Array.isArray(value)) {
+                   markdown += `**${formattedKey}**\n${value.map(v => `- ${v}`).join('\n')}\n\n`;
+                 } else {
+                   markdown += `**${formattedKey}**\n${value}\n\n`;
+                 }
+               }
+               return markdown;
+            }
+            return "";
+          }).join("");
+          
+          finalContent += toolContent;
+        }
+        
+        if (chatId && finalContent.trim()) {
+          await prisma.message.create({
+            data: {
+              conversationId: chatId,
+              role: "assistant",
+              content: finalContent.trim(),
+            }
+          });
+        }
+      },
+    });
 
-  console.log(result);
-
-  return result.toDataStreamResponse();
+    return result.toDataStreamResponse();
+  } catch (error: any) {
+    console.error("Chat route streaming error:", error);
+    return new Response(JSON.stringify({ error: error.message || "Failed to process chat request" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
 }

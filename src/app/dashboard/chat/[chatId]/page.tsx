@@ -8,11 +8,11 @@ export default async function DynamicChatPage({ params }: { params: Promise<{ ch
   try {
     dbMessages = await getConversationMessages(chatId);
   } catch (error) {
-    // If chat not found or unauthorized, redirect back to chat root
+    
     redirect("/dashboard/chat");
   }
 
-  // Format database messages for Vercel AI SDK
+  
   const initialMessages = dbMessages.map((msg) => ({
     id: msg.id,
     role: msg.role as 'user' | 'assistant',

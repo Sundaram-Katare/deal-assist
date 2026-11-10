@@ -15,7 +15,7 @@ export default function PricingPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
         
-        {/* Free Plan */}
+        {}
         <div className="rounded-3xl bg-[#0a0a0a] border border-white/10 p-8 md:p-10 flex flex-col hover:border-white/20 transition-all shadow-xl">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-white mb-2">Starter</h2>
@@ -51,9 +51,9 @@ export default function PricingPage() {
           </button>
         </div>
 
-        {/* Paid Plan */}
+        {}
         <div className="rounded-3xl bg-gradient-to-b from-[#002b18] to-[#0a0a0a] border border-[#00D47E]/40 p-8 md:p-10 flex flex-col hover:border-[#00D47E]/60 transition-all shadow-2xl relative overflow-hidden">
-          {/* Glow effect */}
+          {}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-32 bg-[#00D47E]/20 blur-[80px] rounded-full pointer-events-none"></div>
           
           <div className="absolute top-0 right-8 bg-[#00D47E] text-black text-xs font-bold px-3 py-1 rounded-b-lg">

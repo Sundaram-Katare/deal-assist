@@ -1,5 +1,5 @@
-// @ts-ignore
-// @ts-ignore
+
+
 if (typeof global !== "undefined" && typeof global.DOMMatrix === "undefined") {
     (global as any).DOMMatrix = class DOMMatrix {
         constructor() { return [1, 0, 0, 1, 0, 0]; }

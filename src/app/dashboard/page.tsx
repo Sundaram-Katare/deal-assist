@@ -33,7 +33,7 @@ export default async function DashboardPage() {
     redirect("/sign-in");
   }
 
-  // Get user's membership
+  
   const membership = await prisma.membership.findFirst({
     where: {
       userId: session.user.id,
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-[#050505] font-sans text-white p-4 md:p-8 selection:bg-[#00D47E]/30">
       <div className="max-w-7xl mx-auto space-y-6">
         
-        {/* Header */}
+        {}
         <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
@@ -76,10 +76,10 @@ export default async function DashboardPage() {
           </div>
         </header>
 
-        {/* Top Row */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Upload Documents Card */}
+          {}
           <div className="lg:col-span-1 rounded-2xl bg-gradient-to-br from-[#004225] to-[#0a0a0a] border border-[#00D47E]/20 p-8 flex flex-col justify-between relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#00D47E]/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             <div>
@@ -99,9 +99,9 @@ export default async function DashboardPage() {
             </Link>
           </div>
 
-          {/* AI Chat Card */}
+          {}
           <div className="lg:col-span-2 rounded-2xl bg-[#0a0a0a] border border-white/5 p-8 flex flex-col md:flex-row gap-8 items-center overflow-hidden relative group hover:border-white/10 transition-colors">
-            {/* Stars background mock */}
+            {}
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#00D47E]/5 via-transparent to-transparent opacity-50 pointer-events-none"></div>
             
             <div className="flex-1 z-10">
@@ -120,15 +120,15 @@ export default async function DashboardPage() {
               </Link>
             </div>
 
-            {/* Mock Chat UI UI Graphic */}
+            {}
             <div className="flex-1 w-full relative z-10 hidden sm:block">
               <div className="bg-[#111] border border-white/10 rounded-xl p-4 shadow-2xl flex flex-col gap-4 max-w-sm ml-auto">
-                {/* User Message */}
+                {}
                 <div className="bg-white/5 rounded-lg rounded-tr-none p-3 text-xs text-zinc-300 ml-8 border border-white/5">
                   <span className="text-[10px] text-zinc-500 block mb-1">You</span>
                   Compare our product with HubSpot
                 </div>
-                {/* AI Message */}
+                {}
                 <div className="flex gap-2 mr-8">
                   <div className="w-6 h-6 rounded-md bg-[#00D47E]/20 border border-[#00D47E]/30 flex items-center justify-center flex-shrink-0">
                     <Sparkles className="w-3 h-3 text-[#00D47E]" />
@@ -148,10 +148,10 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Middle Row */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* See Your Documents Stats */}
+          {}
           <div className="lg:col-span-1 rounded-2xl bg-[#0a0a0a] border border-white/5 p-8 relative overflow-hidden group hover:border-white/10 transition-colors flex flex-col">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-8 h-8 bg-[#00D47E]/10 rounded-lg flex items-center justify-center border border-[#00D47E]/20 text-[#00D47E]">
@@ -172,13 +172,13 @@ export default async function DashboardPage() {
               View All <ArrowRight className="w-3 h-3" />
             </Link>
 
-            {/* Document graphic decoration */}
+            {}
             <div className="absolute -bottom-6 -right-6 opacity-40 group-hover:opacity-60 transition-opacity">
               <FileText className="w-40 h-40 text-[#00D47E]/20 drop-shadow-[0_0_30px_rgba(0,212,126,0.2)]" />
             </div>
           </div>
 
-          {/* Tools We Provide */}
+          {}
           <div className="lg:col-span-2 rounded-2xl bg-[#0a0a0a] border border-white/5 p-8 flex flex-col hover:border-white/10 transition-colors">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
@@ -216,12 +216,12 @@ export default async function DashboardPage() {
 
         </div>
 
-        {/* Bottom Row */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           
           <ReviewCard />
 
-          {/* Quick Links */}
+          {}
           <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 flex flex-col hover:border-white/10 transition-colors">
             <div className="flex items-center gap-2 mb-6">
               <LinkIcon className="w-4 h-4 text-[#00D47E]" />
@@ -245,7 +245,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* What's New */}
+          {}
           <div className="rounded-2xl bg-[#0a0a0a] border border-white/5 p-6 flex flex-col hover:border-white/10 transition-colors">
             <div className="flex items-center gap-2 mb-6">
               <Sparkles className="w-4 h-4 text-[#00D47E]" />
@@ -254,8 +254,8 @@ export default async function DashboardPage() {
             <div className="space-y-4 flex-1 relative before:absolute before:inset-y-0 before:left-2 before:w-px before:bg-white/10 ml-1">
               {[
                 { title: "First version: SellGenie 1.0", time: "2 days ago" },
-                // { title: "Improved chat accuracy", time: "5 days ago" },
-                // { title: "Faster document processing", time: "1 week ago" },
+                
+                
               ].map((item, i) => (
                 <div key={i} className="relative pl-6">
                   <div className="absolute left-[7px] top-1.5 w-1.5 h-1.5 rounded-full bg-[#00D47E] ring-4 ring-[#0a0a0a] -translate-x-1/2"></div>

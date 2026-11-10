@@ -26,7 +26,7 @@ export default function DocumentClient({ initialDocuments }: DocumentClientProps
       formData.append("file", file);
       formData.append("sourceType", sourceType);
 
-      // Optimistically add to UI
+      
       const optimisticDoc = {
         id: "temp-" + Date.now(),
         title: file.name,
@@ -41,11 +41,11 @@ export default function DocumentClient({ initialDocuments }: DocumentClientProps
       
       if (res.error) {
         setError(res.error);
-        // Remove optimistic doc
+        
         setDocuments(docs => docs.filter(d => d.id !== optimisticDoc.id));
       } else {
-        // In a real app we would refetch or rely on Server Actions revalidating the path
-        // Since we are using Server Actions and `revalidatePath`, Next.js will refresh the page data
+        
+        
         window.location.reload(); 
       }
     } catch (err) {
@@ -58,7 +58,7 @@ export default function DocumentClient({ initialDocuments }: DocumentClientProps
 
   return (
     <div className="grid md:grid-cols-3 gap-8">
-      {/* Upload Form */}
+      {}
       <div className="md:col-span-1 p-6 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm h-fit">
         <h2 className="text-xl font-medium mb-4">Upload New</h2>
         
@@ -104,7 +104,7 @@ export default function DocumentClient({ initialDocuments }: DocumentClientProps
         </form>
       </div>
 
-      {/* Document List */}
+      {}
       <div className="md:col-span-2 space-y-4">
         <h2 className="text-xl font-medium mb-4">Organization Documents</h2>
         {documents.length === 0 ? (

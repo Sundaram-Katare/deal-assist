@@ -9,7 +9,7 @@ export interface DocumentChunk {
 
 export async function chunkText(
   text: string,
-  chunkSize: number = 1000, // 200-250 words
+  chunkSize: number = 1000, 
   chunkOverlap: number = 200
 ): Promise<DocumentChunk[]> {
   if (!text || text.trim() === "") {

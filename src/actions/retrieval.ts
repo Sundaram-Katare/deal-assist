@@ -7,51 +7,49 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { prisma } from "../lib/prisma";
 
-/**
- * Server Action to retrieve context based on a user's question.
- * It strictly enforces organization isolation.
- */
-export async function retrieveContext(question: string): Promise<string> {
-  // 1. Authenticate the request
-  const session = await getServerSession(authOptions);
-  
-  if (!session?.user?.id) {
-    throw new Error("Unauthorized");
+export async function retrieveContext(question: string, passedOrgId?: string): Promise<string> {
+  let orgId = passedOrgId;
+
+  if (!orgId) {
+    const session = await getServerSession(authOptions);
+    
+    if (!session?.user?.id) {
+      console.warn("retrieveContext: No user session found");
+      return "";
+    }
+
+    const membership = await prisma.membership.findFirst({
+      where: { userId: session.user.id },
+    });
+
+    if (!membership?.orgId) {
+      console.warn("retrieveContext: User has no organization");
+      return "";
+    }
+
+    orgId = membership.orgId;
   }
-
-  const membership = await prisma.membership.findFirst({
-    where: { userId: session.user.id },
-  });
-
-  if (!membership?.orgId) {
-    throw new Error("Unauthorized: User must belong to an organization.");
-  }
-
-  const orgId = membership.orgId;
 
   try {
-    // 2. Generate a vector embedding for the user's question
     const queryVector = await generateSingleEmbedding(question);
-
-    // 3. Search Qdrant for the Top 5 most similar chunks (Strictly filtered by orgId)
     const similarChunks = await searchSimilarChunks(queryVector, orgId, 5);
 
-    if (similarChunks.length === 0) {
+    if (!similarChunks || similarChunks.length === 0) {
+      console.log("retrieveContext: No matching chunks found in Qdrant");
       return "No relevant context found in the company's documents.";
     }
 
-    // 4. Context Assembly: Combine the chunks into a single string
+    console.log(`retrieveContext: Found ${similarChunks.length} relevant chunks`);
+
     const assembledContext = similarChunks
-      .map((chunk, index) => {
-        // We can add Document ID here later to provide citations to the user
-        return `[Source Document: ${chunk.documentId}]\n${chunk.text}`;
-      })
+      .filter((chunk) => chunk && chunk.text)
+      .map((chunk) => `[Source Document: ${chunk.documentId || "Document"}]\n${chunk.text}`)
       .join("\n\n---\n\n");
 
-    return assembledContext;
+    return assembledContext || "No relevant context found in the company's documents.";
 
   } catch (error) {
-    console.error("Retrieval pipeline failed:", error);
-    throw new Error("Failed to retrieve context for the question.");
+    console.error("Retrieval pipeline warning (proceeding without context):", error);
+    return "";
   }
 }

@@ -32,7 +32,7 @@ export async function uploadDocument(formData: FormData) {
     return { error: "No file provided" };
   }
 
-  // 1. Create document record
+  
   const document = await prisma.document.create({
     data: {
       orgId,
@@ -44,13 +44,13 @@ export async function uploadDocument(formData: FormData) {
   });
 
   try {
-    // Ensure qdrant collection exists
+    
     await ensureCollection();
 
-    // 2. Parse text from file
+    
     const text = await extractTextFromFile(file);
 
-    // 3. Chunk the text
+    
     const chunks: DocumentChunk[] = await chunkText(text);
 
     if (chunks.length === 0) {
@@ -59,10 +59,10 @@ export async function uploadDocument(formData: FormData) {
 
     const texts = chunks.map(c => c.text);
 
-    // 4. Generate embeddings
+    
     const embeddings = await generateEmbeddings(texts);
 
-    // 5. Store in Qdrant
+    
     const payloads = chunks.map(chunk => ({
       documentId: document.id,
       organizationId: orgId,
@@ -72,7 +72,7 @@ export async function uploadDocument(formData: FormData) {
 
     await storeChunksInQdrant(embeddings, payloads);
 
-    // 6. Update document status
+    
     await prisma.document.update({
       where: { id: document.id },
       data: {

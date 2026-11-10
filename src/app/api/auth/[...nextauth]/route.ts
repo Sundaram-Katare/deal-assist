@@ -6,7 +6,7 @@ import { prisma } from "../../../../lib/prisma";
 import bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any, // type issue with next-auth v4 and @auth/prisma-adapter
+  adapter: PrismaAdapter(prisma) as any, 
   session: {
     strategy: "jwt",
   },

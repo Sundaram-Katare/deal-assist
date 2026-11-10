@@ -13,7 +13,7 @@ export async function joinOrganization(orgId: string) {
 
   const userId = session.user.id;
 
-  // Check if org exists
+  
   const org = await prisma.organization.findUnique({
     where: { id: orgId },
   });
@@ -22,7 +22,7 @@ export async function joinOrganization(orgId: string) {
     return { error: "Organization not found" };
   }
 
-  // Check if already a member
+  
   const existingMembership = await prisma.membership.findUnique({
     where: {
       userId_orgId: {
@@ -36,7 +36,7 @@ export async function joinOrganization(orgId: string) {
     return { error: "You are already a member of this organization" };
   }
 
-  // Create membership
+  
   await prisma.membership.create({
     data: {
       userId,
@@ -57,7 +57,7 @@ export async function createOrganization(name: string) {
 
   const userId = session.user.id;
 
-  // Create organization and add user as ADMIN
+  
   const org = await prisma.organization.create({
     data: {
       name,

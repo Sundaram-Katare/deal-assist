@@ -16,10 +16,10 @@ export default function HowItWorks() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto relative">
-          {/* Connector Line (Desktop only) */}
+          {}
           <div className="hidden md:block absolute top-24 left-[16%] right-[16%] h-[2px] bg-gradient-to-r from-transparent via-[#00D47E]/50 to-transparent"></div>
 
-          {/* Step 1 */}
+          {}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ export default function HowItWorks() {
             </p>
           </motion.div>
 
-          {/* Step 2 */}
+          {}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -53,7 +53,7 @@ export default function HowItWorks() {
             </p>
           </motion.div>
 
-          {/* Step 3 */}
+          {}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

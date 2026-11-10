@@ -11,7 +11,7 @@ export default async function OnboardingPage() {
     redirect("/sign-in");
   }
 
-  // Check if user already has a membership
+  
   const memberships = await prisma.membership.findMany({
     where: {
       userId: session.user.id,
