@@ -13,6 +13,9 @@ const groq = createOpenAI({
 
 const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
+export const maxDuration = 60;
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: Request) {
   const session = await getServerSession(authOptions);
   
@@ -180,13 +183,17 @@ INSTRUCTIONS:
         }
         
         if (chatId && finalContent.trim()) {
-          await prisma.message.create({
-            data: {
-              conversationId: chatId,
-              role: "assistant",
-              content: finalContent.trim(),
-            }
-          });
+          try {
+            await prisma.message.create({
+              data: {
+                conversationId: chatId,
+                role: "assistant",
+                content: finalContent.trim(),
+              }
+            });
+          } catch (dbErr) {
+            console.error("Failed to save assistant message in onFinish:", dbErr);
+          }
         }
       },
     });

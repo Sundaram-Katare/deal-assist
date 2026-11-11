@@ -1,15 +1,21 @@
-import { pipeline, env } from "@xenova/transformers";
+import path from "path";
+import os from "os";
 
-// Configure Transformers.js for server-side Next.js
-env.allowLocalModels = false;
-env.useBrowserCache = false;
-
-// Lazy-load the feature-extraction pipeline singleton so it initializes only once in memory
+// Lazy-load the feature-extraction pipeline singleton with dynamic import
 let extractorPromise: Promise<any> | null = null;
 
 async function getExtractor() {
   if (!extractorPromise) {
-    extractorPromise = pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+    extractorPromise = (async () => {
+      const { pipeline, env } = await import("@xenova/transformers");
+      
+      // In serverless environments (e.g. Vercel), only /tmp is writable
+      env.cacheDir = path.join(os.tmpdir(), ".cache");
+      env.allowLocalModels = false;
+      env.useBrowserCache = false;
+
+      return pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+    })();
   }
   return extractorPromise;
 }
